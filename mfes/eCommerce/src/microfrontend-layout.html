@@ -1,0 +1,42 @@
+<single-spa-router>
+  <!--
+
+    This is the single-spa Layout Definition for your microfrontends.
+    See https://single-spa.js.org/docs/layout-definition/ for more information.
+
+  -->
+
+  <!-- Example layouts you might find helpful:
+
+  <nav>
+    <application name="@org/navbar"></application>
+  </nav>
+  <route path="settings">
+    <application name="@org/settings"></application>
+  </route>
+
+  -->
+
+  
+  <main>
+    <route path="login">
+      <application name="@sampleOrg/login"></application>
+    </route>
+    <route path="products">
+      <application name="@sampleOrg/navbar"></application>
+      <application name="@sampleOrg/products"></application>
+    </route>
+    <route path="orders">
+      <application name="@sampleOrg/navbar"></application>
+      <application name="@sampleOrg/orders"></application>
+    </route>
+    <route path="carts">
+      <application name="@sampleOrg/navbar"></application>
+      <application name="@sampleOrg/carts"></application>
+    </route>
+    <route path="productCatalogue">
+      <application name="@sampleOrg/navbar"></application>
+      <application name="@sampleOrg/productCatalogue"></application>
+    </route>
+  </main>
+</single-spa-router>
