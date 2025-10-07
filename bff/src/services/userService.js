@@ -14,12 +14,10 @@ const userService = {
     return response.data;
   },
   getUserById: async (id) => {
-    console.log('Fetching user by ID from:', USER_SERVICE_URL, 'with ID:', id);
     const response = await httpClient.get(`${USER_SERVICE_URL}/${id}`);
     return response.data;
   },
   getUserByEmail: async (email) => {
-    console.log('Fetching user by email from:', USER_SERVICE_URL, 'with email:', email);
     const response = await httpClient.get(`${USER_SERVICE_URL}/email`, {
       params: { email }
     });

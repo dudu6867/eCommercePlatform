@@ -152,6 +152,45 @@ router.get('/names/:name', productController.searchProductsByName);
 
 /**
  * @swagger
+ * /bff/products/stewardNames/{name}:
+ *   get:
+ *     summary: Search products by name
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Search results
+ */
+router.get('/stewardNames/:name', productController.searchProductsByStewardName);
+
+/**
+ * @swagger
+ * /bff/products/supplierItems/{supplierId}/{name}:
+ *   get:
+ *     summary: Search products by name relevant to supplier
+ *     parameters:
+ *       - in: path
+ *         name: supplierId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Search results
+ */
+router.get('/supplierItems/:supplierId/:name', productController.searchProductsBySupplierName);
+
+/**
+ * @swagger
  * /bff/products/supplier/{id}:
  *   patch:
  *     summary: Supplier updates product fields

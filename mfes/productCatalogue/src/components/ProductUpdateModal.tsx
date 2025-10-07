@@ -24,6 +24,7 @@ const ProductUpdateModal: React.FC<Props> = ({
 }) => {
   const [preview, setPreview] = useState<string | null>(null);
 
+  console.log("Selected product", selectedProduct);
 
   useEffect(() => {
     // Reset preview when a new product is selected

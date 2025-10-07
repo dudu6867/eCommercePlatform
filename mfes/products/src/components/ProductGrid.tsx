@@ -39,7 +39,7 @@ const ProductGrid: React.FC<Props> = ({
 
                             <div className="mb-2">
                                 <span className="badge bg-info text-dark">
-                                    {product.categoryId}
+                                    {product.categoryName}
                                 </span>
                             </div>
                             <Card.Text>

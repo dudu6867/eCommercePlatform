@@ -116,6 +116,20 @@ public class ProductServiceImplement implements ProductService{
                 .toList();
     }
 
+    public List<ProductDTO> searchProductsByNameAll(String name) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
+        return products.stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
+
+    public List<ProductDTO> searchBySupplierItem(Long supplierId, String name) {
+        List<Product> products = productRepository.findBySupplierIdAndNameContainingIgnoreCase(supplierId, name);
+        return products.stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
+
     @Override
     public CategoryDTO createCategory(CategoryDTO dto) {
         Category category = categoryMapper.toEntity(dto);
@@ -173,5 +187,6 @@ public class ProductServiceImplement implements ProductService{
         logger.info("Delete category successful");
         categoryRepository.deleteById(id);
     }
+
 
 }

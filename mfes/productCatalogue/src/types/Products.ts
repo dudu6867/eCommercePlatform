@@ -5,6 +5,7 @@ export interface Product {
   price: number;
   quantity: number;
   categoryId: number;
+  categoryName?: string;
   supplierId?: number;
   isApproved?: boolean;
   imageUrl?: string;

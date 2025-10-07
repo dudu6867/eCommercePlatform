@@ -12,7 +12,7 @@ import java.util.List;
 
 //@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByNameContainingIgnoreCase(String name);
+
     Page<Product> findAllByIsApprovedTrue(Pageable pageable);
 
     Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
@@ -20,6 +20,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAllBySupplierId(Long supplierId, Pageable pageable);
 
+    List<Product> findByNameContainingIgnoreCase(String name);
+
     List<Product> findByNameContainingIgnoreCaseAndIsApprovedTrue(String name);
+
+    List<Product> findBySupplierIdAndNameContainingIgnoreCase(Long supplierId, String name);
 
 }

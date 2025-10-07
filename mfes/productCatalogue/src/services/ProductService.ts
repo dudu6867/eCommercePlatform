@@ -11,7 +11,7 @@ const productService = {
   },
 
   getAllProductsStewardsPaginated: async (
-    page: number, 
+    page: number,
     size: number
   ): Promise<{ content: Product[]; totalPages: number; totalElements: number }> => {
     const res = await fetch(`http://localhost:3000/bff/products/stewards?page=${page}&size=${size}`);
@@ -40,7 +40,7 @@ const productService = {
 
   getProductBySupplierPaginated: async (
     supplierId: number,
-    page: number, 
+    page: number,
     size: number
   ): Promise<{ content: Product[]; totalPages: number; totalElements: number }> => {
     const res = await fetch(`${BASE_URL}/supplier/${supplierId}?page=${page}&size=${size}`);
@@ -83,7 +83,33 @@ const productService = {
     if (!res.ok) throw new Error("Failed to delete product");
     return res.json();
   },
-  
+
+  searchProductsByName: async (name: string): Promise<Product[]> => {
+    if (!name.trim()) throw new Error("Please enter a product name");
+
+    const response = await fetch(
+      `http://localhost:3000/bff/products/stewardNames/${encodeURIComponent(name)}`
+    );
+
+    if (!response.ok) throw new Error("Search failed");
+
+    const result = await response.json();
+    return result || [];
+  },
+
+  searchProductsByNameSupplier: async (id: number , name: string): Promise<Product[]> => {
+    if (!name.trim()) throw new Error("Please enter a product name");
+
+    const response = await fetch(
+      `http://localhost:3000/bff/products/supplierItems/${encodeURIComponent(id)}/${encodeURIComponent(name)}`
+    );
+
+    if (!response.ok) throw new Error("Search failed");
+
+    const result = await response.json();
+    return result || [];
+  },
+
 };
 
 export default productService;

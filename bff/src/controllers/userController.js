@@ -7,6 +7,7 @@ export const createUser = async (req, res, next) => {
     const user = await userService.createUser(userData);
     res.status(201).json(user);
   } catch (err) {
+    logger.error('Error creating users', { where: 'controllers/userController.js - createUser', error: err });
     return handleError(res, err, 'An error occurred while creating the user.');
   }
 };
@@ -16,6 +17,7 @@ export const getAllUsers = async (req, res, next) => {
     const users = await userService.getAllUsers();
     res.json(users);
   } catch (err) {
+    logger.error('Error getting all users', { where: 'controllers/userController.js - createUser', error: err });
     return handleError(res, err, 'An error occurred while fetching users.');
   }
 };
@@ -26,6 +28,7 @@ export const getUserById = async (req, res, next) => {
     const user = await userService.getUserById(id);
     res.json(user);
   } catch (err) {
+    logger.error('Error getting user by Id', { where: 'controllers/userController.js - createUser', error: err });
     return handleError(res, err, 'An error occurred while fetching the user.');
   }
 };
@@ -37,6 +40,7 @@ export const getUserByEmail = async (req, res, next) => {
     const user = await userService.getUserByEmail(email);
     res.json(user);
   } catch (err) {
+    logger.error('Error getting user by email', { where: 'controllers/userController.js - createUser', error: err });
     return handleError(res, err, 'An error occurred while fetching the user by email.');
   }
 };
@@ -48,6 +52,7 @@ export const updateUser = async (req, res, next) => {
     const updated = await userService.updateUser(id, userData);
     res.json(updated);
   } catch (err) {
+    logger.error('Error updating user', { where: 'controllers/userController.js - createUser', error: err });
     return handleError(res, err, 'An error occurred while updating the user.');
   }
 };
@@ -58,6 +63,7 @@ export const deleteUser = async (req, res, next) => {
     const result = await userService.deleteUser(id);
     res.json(result);
   } catch (err) {
+    logger.error('Error deleting user', { where: 'controllers/userController.js - createUser', error: err });
     return handleError(res, err, 'An error occurred while deleting the user.');
   }
 };

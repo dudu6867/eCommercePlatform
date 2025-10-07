@@ -35,7 +35,6 @@ const cartService = {
             const response = await httpClient.patch(`${CART_SERVICE_URL}/${userId}`, cartDTO);
             return response.data;
         } catch (error) {
-            console.error('Failed to patch cart:', error);
             throw error;
         }
     },
@@ -45,14 +44,12 @@ const cartService = {
             const response = await httpClient.get(`${CART_SERVICE_URL}/${userId}`);
 
             if (!response.data) {
-                console.warn(`No cart found for user ID: ${userId}`); // ToDo: log here
                 return {
                     items: [],
                 };
             }
 
             const cartData = response.data;
-            console.log(`Cart data retrieved for user ID ${userId}:`, cartData); // ToDo: log here
 
             const cartItemsPromises =
                 Object.entries(cartData.productQuantities).map(async ([productId, quantity]) => {
@@ -68,13 +65,10 @@ const cartService = {
 
                 });
 
-            console.log(`Cart data for user ID ${userId}:`, cartData); // ToDo: log here
-
             const items = await Promise.all(cartItemsPromises);
             console.log(`Fetched items for user ID ${userId}:`, items);
             return items;
         } catch (error) {
-            console.error(`Error fetching cart or items for user ID ${userId}:`, error); // ToDo: log here
             throw error;
         }
     },

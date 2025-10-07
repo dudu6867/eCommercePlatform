@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Spinner, Alert } from "react-bootstrap";
+import { Button, Spinner, Alert, Form } from "react-bootstrap";
 
 import productService from "../services/ProductService";
 
@@ -9,6 +9,7 @@ import ProductTable from "../components/ProductTable";
 import ProductFormModal from "../components/ProductFormModal";
 import ProductUpdateModal from "../components/ProductUpdateModal";
 import PaginationControl from "../components/PaginationControl";
+import SearchBar from "../components/SearchBar";
 
 import useUser from "../hooks/useUsers";
 import useProducts from "../hooks/useProducts";
@@ -26,6 +27,10 @@ const ProductCatalogueApp: React.FC = () => {
 
     const [newProduct, setNewProduct] = useState<Partial<Product>>({});
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+    const [error, setError] = useState<string | null>(null);
+    const [search, setSearch] = useState("");
+    const [searchLoading, setSearchLoading] = useState(false);
 
     const [page, setPage] = useState(0);
     const [size] = useState(8); // items per page
@@ -78,6 +83,35 @@ const ProductCatalogueApp: React.FC = () => {
         }
     };
 
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!search.trim()) {
+            setError("Please enter a product name");
+            return;
+        }
+
+        setSearchLoading(true);
+        setError(null);
+
+
+        try {
+            if (user.role == "steward") {
+                const result = await productService.searchProductsByName(search);
+                setProducts(result);
+            }
+            else {
+                const result = await productService.searchProductsByNameSupplier(user.id, search);
+                setProducts(result);
+            }           
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setSearchLoading(false);
+        }
+
+    };
+
 
 
 
@@ -87,9 +121,18 @@ const ProductCatalogueApp: React.FC = () => {
 
 
     return (
+
         <div className="container my-4">
-            <div className="d-flex justify-content-end align-items-center mb-3">
-                
+            
+    
+            <div className="d-flex justify-content-between align-items-center mb-3 ">
+                <Form className="d-flex" onSubmit={handleSearch}>
+                    <SearchBar
+                        search={search}
+                        setSearch={setSearch}
+                        searchLoading={searchLoading}
+                    />
+                </Form>
                 {user.role === "supplier" && (
                     <Button onClick={() => setShowModal(true)}>Create Product</Button>
                 )}

@@ -39,7 +39,7 @@ const ProductTable: React.FC<Props> = ({
                         <tr key={product.id}>
                             <td>{product.name}</td>
                             <td>{product.description}</td>
-                            <td>{product.categoryId}</td>
+                            <td>{product.categoryName}</td>
                             <td>{product.price.toFixed(2)}</td>
                             <td>{product.quantity}</td>
                             {userRole === "steward" && <td>{product.supplierId}</td>}

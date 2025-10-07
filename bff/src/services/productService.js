@@ -5,22 +5,19 @@ const PRODUCT_SERVICE_URL = config.productServiceUrl;
 
 const productService = {
     createProduct: async (dto) => {
-        const response = await httpClient.post(`${PRODUCT_SERVICE_URL}`, dto);
-        return response.data;
-    },
+        try {
+            const response = await httpClient.post(`${PRODUCT_SERVICE_URL}`, dto);
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
 
-    // getAllProducts: async () => {
-    //     console.log('Fetching products from:', PRODUCT_SERVICE_URL);
-    //     const response = await httpClient.get(`${PRODUCT_SERVICE_URL}`);
-    //     return response.data;
-    // },
+    },
 
     getAllProducts: async (params) => {
         try {
-            console.log('Fetching products from:', PRODUCT_SERVICE_URL, 'with params:', params);
             const response = await httpClient.get(`${PRODUCT_SERVICE_URL}`, { params });
-
-            console.log("res", response.data);
 
             const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
 
@@ -34,7 +31,7 @@ const productService = {
             const transformedProducts = response.data.content.map(product => {
                 return {
                     ...product,
-                    categoryId: categoryMap[product.categoryId],
+                    categoryName: categoryMap[product.categoryId],
                 };
             });
 
@@ -52,22 +49,19 @@ const productService = {
 
     getAllProductsStewards: async (params) => {
         try {
-            // Fetch products and categories
             const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/stewards`, { params });
 
             const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
 
-            // Create a map of categoryId to category name
             const categoryMap = {};
             categoryResponse.data.forEach(cat => {
                 categoryMap[cat.categoryId] = cat.name;
             });
 
-            // Transform products to include categoryName instead of categoryId
             const transformedProducts = response.data.content.map(product => {
                 return {
                     ...product,
-                    categoryId: categoryMap[product.categoryId],
+                    categoryName: categoryMap[product.categoryId],
                 };
             });
 
@@ -81,48 +75,80 @@ const productService = {
         catch (error) {
             throw error;
         }
-        // console.log('Fetching products from:', PRODUCT_SERVICE_URL, 'with params:', params);
-        // const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/stewards`, { params });
-        // return response.data;
     },
 
     getProductById: async (id) => {
-        const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/${id}`);
-        return response.data;
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/${id}`);
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+
     },
 
     patchProduct: async (id, partialDto) => {
-        const response = await httpClient.patch(`${PRODUCT_SERVICE_URL}/${id}`, partialDto);
-        return response.data;
-    },
-
-    deleteProduct: async (id) => {
-        await httpClient.delete(`${PRODUCT_SERVICE_URL}/${id}`);
-        return { message: `Product ${id} deleted successfully` };
-    },
-
-    getProductByCategory: async (categoryId, params) => {
-        const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/category/${categoryId}`, { params });
-        return response.data;
-    },
-
-    getProductBySupplier: async (supplierId, params) => {
         try {
-            // Fetch products and categories
-            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/supplier/${supplierId}`, { params });
+            const response = await httpClient.patch(`${PRODUCT_SERVICE_URL}/${id}`, partialDto);
             const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
 
-            // Create a map of categoryId to category name
             const categoryMap = {};
             categoryResponse.data.forEach(cat => {
                 categoryMap[cat.categoryId] = cat.name;
             });
 
-            // Transform products to include categoryName instead of categoryId
+            console.log("here", response.data);
+
+            const transformedProducts = {
+                ...response.data,
+                categoryName: categoryMap[response.data.categoryId]
+            };
+
+            return transformedProducts;
+        }
+        catch (error) {
+            throw error;
+        }
+
+    },
+
+    deleteProduct: async (id) => {
+        try {
+            await httpClient.delete(`${PRODUCT_SERVICE_URL}/${id}`);
+            return { message: `Product ${id} deleted successfully` };
+        }
+        catch (error) {
+            throw error;
+        }
+
+    },
+
+    getProductByCategory: async (categoryId, params) => {
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/category/${categoryId}`, { params });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+
+    },
+
+    getProductBySupplier: async (supplierId, params) => {
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/supplier/${supplierId}`, { params });
+            const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
+
+            const categoryMap = {};
+            categoryResponse.data.forEach(cat => {
+                categoryMap[cat.categoryId] = cat.name;
+            });
+
             const transformedProducts = response.data.content.map(product => {
                 return {
                     ...product,
-                    categoryId: categoryMap[product.categoryId],
+                    categoryName: categoryMap[product.categoryId],
                 };
             });
 
@@ -141,27 +167,78 @@ const productService = {
 
     searchProductsByName: async (name) => {
         try {
-            console.log('Searching products by name from:', PRODUCT_SERVICE_URL, 'with name:', name);
             const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/names/${name}`);
 
             const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
 
-            // Create a map of categoryId to category name
             const categoryMap = {};
             categoryResponse.data.forEach(cat => {
                 categoryMap[cat.categoryId] = cat.name;
             });
 
-            // Transform products to include categoryName instead of categoryId
             const transformedProducts = response.data.map(product => {
                 return {
                     ...product,
-                    categoryId: categoryMap[product.categoryId],
+                    categoryName: categoryMap[product.categoryId],
                 };
             });
 
             return transformedProducts;
-           
+
+        }
+        catch (error) {
+            throw error;
+        }
+
+    },
+
+    searchProductsByStewardName: async (name) => {
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/stewardNames/${name}`);
+
+            const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
+
+            const categoryMap = {};
+            categoryResponse.data.forEach(cat => {
+                categoryMap[cat.categoryId] = cat.name;
+            });
+
+            const transformedProducts = response.data.map(product => {
+                return {
+                    ...product,
+                    categoryName: categoryMap[product.categoryId],
+                };
+            });
+
+            return transformedProducts;
+
+        }
+        catch (error) {
+            throw error;
+        }
+
+    },
+
+    searchProductsBySupplierName: async (supplierId, name) => {
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/supplierItems/${supplierId}/${name}`);
+
+            const categoryResponse = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
+
+            const categoryMap = {};
+            categoryResponse.data.forEach(cat => {
+                categoryMap[cat.categoryId] = cat.name;
+            });
+
+            const transformedProducts = response.data.map(product => {
+                return {
+                    ...product,
+                    categoryName: categoryMap[product.categoryId],
+                };
+            });
+
+            return transformedProducts;
+
         }
         catch (error) {
             throw error;
@@ -171,28 +248,48 @@ const productService = {
 
     // CATEGORY ENDPOINTS
     createCategory: async (dto) => {
-        const response = await httpClient.post(`${PRODUCT_SERVICE_URL}/categories`, dto);
-        return response.data;
+        try {
+            const response = await httpClient.post(`${PRODUCT_SERVICE_URL}/categories`, dto);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     getCategoryById: async (id) => {
-        const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories/${id}`);
-        return response.data;
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories/${id}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     getAllCategories: async () => {
-        const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
-        return response.data;
+        try {
+            const response = await httpClient.get(`${PRODUCT_SERVICE_URL}/categories`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     patchCategory: async (id, dto) => {
-        const response = await httpClient.patch(`${PRODUCT_SERVICE_URL}/categories/${id}`, dto);
-        return response.data;
+        try {
+            const response = await httpClient.patch(`${PRODUCT_SERVICE_URL}/categories/${id}`, dto);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     deleteCategory: async (id) => {
-        await httpClient.delete(`${PRODUCT_SERVICE_URL}/categories/${id}`);
-        return { message: `Category ${id} deleted successfully` };
+        try {
+            await httpClient.delete(`${PRODUCT_SERVICE_URL}/categories/${id}`);
+            return { message: `Category ${id} deleted successfully` };
+        } catch (error) {
+            throw error;
+        }
     },
 
 };

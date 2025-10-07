@@ -86,6 +86,20 @@ public class ProductController extends BaseController {
         return success(results);
     }
 
+    @GetMapping("/stewardNames/{name}")
+    @Operation(summary = "Search products by name (partial match)")
+    public ResponseEntity<List<ProductDTO>> searchByStewardName(@PathVariable String name) {
+        List<ProductDTO> results = productService.searchProductsByNameAll(name);
+        return success(results);
+    }
+
+    @GetMapping("/supplierItems/{supplierId}/{name}")
+    @Operation(summary = "Search products by name (partial match)")
+    public ResponseEntity<List<ProductDTO>> searchBySupplierItem(@PathVariable Long supplierId, @PathVariable String name) {
+        List<ProductDTO> results = productService.searchBySupplierItem(supplierId, name);
+        return success(results);
+    }
+
     // Category endpoints
     @PostMapping("/categories")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO dto) {
